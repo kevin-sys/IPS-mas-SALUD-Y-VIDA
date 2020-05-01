@@ -41,8 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Contributivo.cs" />
     <Compile Include="LiquidacionCuotaModeradora.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Subsidiado.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

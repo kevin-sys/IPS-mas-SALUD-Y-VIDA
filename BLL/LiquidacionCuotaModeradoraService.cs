@@ -9,107 +9,58 @@ namespace BLL
 {
     public class LiquidacionCuotaModeradoraService
     {
-        private LiquidacionCuotaRepository cuotaRepository;
+        private static LiquidacionCuotaRepository cuotaRepository = new LiquidacionCuotaRepository();
         public LiquidacionCuotaModeradoraService()
         {
             cuotaRepository = new LiquidacionCuotaRepository();
         }
-        const double SALARIOMINIMO = 900000;
 
-        public void calcularLiquidacion(LiquidacionCuotaModeradora liquidacion)
+      
+        public static IEnumerable<LiquidacionCuotaModeradora>ListarContributivo()
         {
-            LiquidarContributivo(liquidacion);
-            LiquidarSubsidiado(liquidacion);
+            return cuotaRepository.ListarContributivo();
         }
 
-        private void LiquidarContributivo(LiquidacionCuotaModeradora liquidacion)
+        public static IEnumerable<LiquidacionCuotaModeradora> ListarSubsidiado()
         {
-            if (liquidacion.TipoAfiliacion.Equals("RC"))
-            {
-                if (liquidacion.SalarioDevengado < SALARIOMINIMO * 2)
-                {
-                    double Tarifa = 15;
-                    liquidacion.CuotaModeradoraReal = liquidacion.ValorServicioHospitalizacion * Tarifa / 100;
-                    double TOPE = 250000;
-                    if (liquidacion.CuotaModeradoraReal > TOPE)
-                    {
-                        liquidacion.CuotaModeradoraFinal = TOPE;
-                        liquidacion.Tope = "SI";
-                    }
-                    else
-                    {
-                        liquidacion.Tope = "NO";
-                        liquidacion.CuotaModeradoraFinal = liquidacion.CuotaModeradoraReal;
-                    }
-                    liquidacion.Tarifa = Tarifa;
-                   
-                }
-
-                if (liquidacion.SalarioDevengado >= SALARIOMINIMO * 2 && liquidacion.SalarioDevengado <= SALARIOMINIMO * 5)
-                {
-                    double Tarifa = 20;
-                    liquidacion.CuotaModeradoraReal = liquidacion.ValorServicioHospitalizacion * Tarifa / 100;
-                    double TOPE = 900000;
-                    if (liquidacion.CuotaModeradoraReal > TOPE)
-                    {
-                        liquidacion.CuotaModeradoraFinal = TOPE;
-                        liquidacion.Tope = "SI";
-                    }
-                    else
-                    {
-                        liquidacion.Tope = "NO";
-                        liquidacion.CuotaModeradoraFinal = liquidacion.CuotaModeradoraReal;
-                    }
-                    liquidacion.Tarifa = Tarifa;
-                }
-
-                if (liquidacion.SalarioDevengado > SALARIOMINIMO * 5)
-                {
-                    double Tarifa = 25;
-                    liquidacion.CuotaModeradoraReal = liquidacion.ValorServicioHospitalizacion * Tarifa / 100;
-                    double TOPE = 1500000;
-                    if (liquidacion.CuotaModeradoraReal > TOPE)
-                    {
-                        liquidacion.CuotaModeradoraFinal = TOPE;
-                        liquidacion.Tope = "SI";
-                    }
-                    else
-                    {
-                        liquidacion.Tope = "NO";
-                        liquidacion.CuotaModeradoraFinal = liquidacion.CuotaModeradoraReal;
-                    }
-                    liquidacion.Tarifa = Tarifa;
-                }
-
-            }
+            return cuotaRepository.ListarSubsidiado();
         }
 
-        private void LiquidarSubsidiado(LiquidacionCuotaModeradora liquidacion)
+        public int TotalizarContributivo()
         {
-            double Tarifa = 5;
-            if (liquidacion.TipoAfiliacion.Equals("RS"))
-            {
-                liquidacion.CuotaModeradoraReal = liquidacion.ValorServicioHospitalizacion * Tarifa/100;
-                double Tope = 200000;
-                if (liquidacion.CuotaModeradoraReal > Tope)
-                {
-                    liquidacion.CuotaModeradoraFinal = Tope;
-                    liquidacion.Tope = "SI";
-                }
-                else
-                {
-                    liquidacion.Tope = "NO";
-                    liquidacion.CuotaModeradoraFinal = liquidacion.CuotaModeradoraReal;
-                }
-                liquidacion.Tarifa = Tarifa;
-            }
+            return cuotaRepository.TotalizarContributivo();
+        }
+
+        public int TotalizarSubsidiado()
+        {
+            return cuotaRepository.TotalizarSubsidiado();
+        }
+
+        public int TotalizarTodos()
+        {
+            return cuotaRepository.TotalizarTodos();
+        }
+
+        public double ValorTotalLiquidacion()
+        {
+            return cuotaRepository.ValorTotalLiquidacion();
+        }
+
+        public double ValorTotalLiquidacionContributivo()
+        {
+            return cuotaRepository.ValorTotalLiquidacionContributivo();
+        }
+
+        public double ValorTotalLiquidacionSubsidiado()
+        {
+            return cuotaRepository.ValorTotalLiquidacionSubsidiado();
         }
 
         public string Guardar(LiquidacionCuotaModeradora liquidacion)
         {
             try
             {
-                if (cuotaRepository.Buscar(liquidacion.NumeroLiquidacion)==null)
+                if (cuotaRepository.Buscar(liquidacion.NumeroLiquidacion) == null)
                 {
                     cuotaRepository.Guardar(liquidacion);
                     return "Los Datos han sido guardados satisfactoriamente";
@@ -118,7 +69,7 @@ namespace BLL
                 {
                     return $"El numero de liquidacion: {liquidacion.NumeroLiquidacion} Ya se encuentra registrado en el sistema";
                 }
-                
+
             }
             catch (Exception e)
             {
@@ -142,6 +93,10 @@ namespace BLL
             {
                 return $"ERROR" + e.Message;
             }
+        }
+        public static IList<LiquidacionCuotaModeradora> ConsultarTodos()
+        {
+            return cuotaRepository.Consultar();
         }
 
         public RespuestaConsulta ConsultarConsultaGeneral()
@@ -191,7 +146,6 @@ namespace BLL
 
         public LiquidacionCuotaModeradora BuscarID(string numeroLiquidacion)
         {
-            LiquidacionCuotaModeradora liquidacion = new LiquidacionCuotaModeradora();
             try
             {
                 return cuotaRepository.Buscar(numeroLiquidacion);
@@ -241,7 +195,7 @@ namespace BLL
     public class RespuestaConsulta
     {
         public string Mensaje { get; set; }
-        public List<LiquidacionCuotaModeradora> liquidaciones { get; set; }
+        public IList<LiquidacionCuotaModeradora> liquidaciones { get; set; }
         public bool Error { get; set; }
     }
 }
