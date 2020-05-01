@@ -143,6 +143,8 @@ namespace DAL
             return liquidaciones.Where(p => p.TipoAfiliacion.Equals("Contributivo") || p.TipoAfiliacion.Equals("Subsidiado") && p.CuotaModeradoraFinal.Equals(p.CuotaModeradoraFinal)).Sum(p => p.CuotaModeradoraFinal);
         }
 
+
+
         public double ValorTotalLiquidacionContributivo()
         {
             return liquidaciones.Where(p => p.TipoAfiliacion.Equals("Contributivo") && p.CuotaModeradoraFinal.Equals(p.CuotaModeradoraFinal)).Sum(p => p.CuotaModeradoraFinal);

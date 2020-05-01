@@ -200,7 +200,7 @@
             this.Controls.Add(this.DgvLiquidacion);
             this.Name = "FrmConsultarLiquidacion";
             this.Text = "FrmConsultarLiquidacion";
-            this.Load += new System.EventHandler(this.FrmConsultarLiquidacion_Load);
+         
             ((System.ComponentModel.ISupportInitialize)(this.DgvLiquidacion)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();

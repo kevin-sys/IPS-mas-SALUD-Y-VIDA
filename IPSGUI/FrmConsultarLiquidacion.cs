@@ -17,53 +17,73 @@ namespace IPSGUI
         public FrmConsultarLiquidacion()
         {
             InitializeComponent();
+            LlenarTabla();
         }
 
-        private void FrmConsultarLiquidacion_Load(object sender, EventArgs e)
-        {
-
-        }
-
-       
 
         private void CmbTipoAfiliacion_SelectedIndexChanged(object sender, EventArgs e)
         {
+            PrepararDatos();
+        }
+
+        private void CargarContributivo()
+        {
+            DgvLiquidacion.DataSource = null;
+            DgvLiquidacion.DataSource = LiquidacionCuotaModeradoraService.ListarContributivo().ToList();
+            TxtContributivo.Text = service.TotalizarContributivo().ToString();
+            TxtValorTotalContributivo.Text = service.ValorTotalLiquidacionContributivo().ToString();
+            TxtValorTotalSubsidiado.Text = "";
+            TxtSubsidiado.Text = "";
+            LimpiarTxt();
+
+
+        }
+        private void CargarSubsidiado()
+        {
+            DgvLiquidacion.DataSource = null;
+            DgvLiquidacion.DataSource = LiquidacionCuotaModeradoraService.ListarSubsidiado().ToList();
+            TxtSubsidiado.Text = service.TotalizarSubsidiado().ToString();
+            TxtValorTotalSubsidiado.Text = service.ValorTotalLiquidacionSubsidiado().ToString();
+            TxtValorTotalContributivo.Text = "";
+            TxtContributivo.Text = "";
+            LimpiarTxt();
+        }
+        private void CargarTodos()
+        {
+            LlenarTabla();
+            TxtTotal.Text = service.TotalizarTodos().ToString();
+            TxtContributivo.Text = service.TotalizarContributivo().ToString();
+            TxtSubsidiado.Text = service.TotalizarSubsidiado().ToString();
+            TxtValorTotalContributivo.Text = service.ValorTotalLiquidacionContributivo().ToString();
+            TxtValorTotalLiquidacion.Text = service.ValorTotalLiquidacion().ToString();
+            TxtValorTotalSubsidiado.Text = service.ValorTotalLiquidacionSubsidiado().ToString();
+        }
+        private void LimpiarTxt()
+        {
+            TxtTotal.Text = "";
+            TxtValorTotalLiquidacion.Text = "";
+        }
+        private void PrepararDatos()
+        {
             if (CmbTipoAfiliacion.Text.Equals("Todos"))
             {
-                DgvLiquidacion.DataSource = null;
-                DgvLiquidacion.DataSource = LiquidacionCuotaModeradoraService.ConsultarTodos();
-                TxtTotal.Text = service.TotalizarTodos().ToString();
-                TxtContributivo.Text = service.TotalizarContributivo().ToString();
-                TxtSubsidiado.Text = service.TotalizarSubsidiado().ToString();
+                CargarTodos();
+            }
 
-                TxtValorTotalContributivo.Text = service.ValorTotalLiquidacionContributivo().ToString();
-                TxtValorTotalLiquidacion.Text = service.ValorTotalLiquidacion().ToString();
-                TxtValorTotalSubsidiado.Text = service.ValorTotalLiquidacionSubsidiado().ToString();
+            if (CmbTipoAfiliacion.Text.Equals("Subsidiado"))
+            {
+                CargarSubsidiado();
+
             }
             if (CmbTipoAfiliacion.Text.Equals("Contributivo"))
             {
-                DgvLiquidacion.DataSource = null;
-                DgvLiquidacion.DataSource = LiquidacionCuotaModeradoraService.ListarContributivo().ToList();
-                TxtContributivo.Text = service.TotalizarContributivo().ToString();
-                TxtValorTotalContributivo.Text = service.ValorTotalLiquidacionContributivo().ToString();
-                TxtValorTotalLiquidacion.Text = "";
-                TxtValorTotalSubsidiado.Text = "";
-                TxtSubsidiado.Text = "";
-                TxtTotal.Text = "";
-
+                CargarContributivo();
             }
-            if (CmbTipoAfiliacion.Text.Equals("Subsidiado"))
-            {
-                DgvLiquidacion.DataSource = null;
-                DgvLiquidacion.DataSource = LiquidacionCuotaModeradoraService.ListarSubsidiado().ToList();
-                TxtSubsidiado.Text = service.TotalizarSubsidiado().ToString();
-                TxtValorTotalSubsidiado.Text = service.ValorTotalLiquidacionSubsidiado().ToString();
-                TxtValorTotalContributivo.Text = "";
-                TxtValorTotalLiquidacion.Text = "";
-                TxtContributivo.Text = "";
-                TxtTotal.Text = "";
-
-            }
+        }
+        private void LlenarTabla()
+        {
+            DgvLiquidacion.DataSource = null;
+            DgvLiquidacion.DataSource = LiquidacionCuotaModeradoraService.ConsultarTodos();
         }
     }
 }
